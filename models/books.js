@@ -26,7 +26,7 @@ const bookSchema = new Schema({
         unique:[true, 'ISBN must be unique']
     },
     price:{
-        type:String,
+        type:Number,
         required:true,
         min:[0, 'price must be greater than or equal to zero']
     }
