@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 const config = require('../config/appConfig');
+const logger = require('../logger/logger');
+
 
 mongoose.set('strictQuery', false);
 
@@ -7,11 +9,11 @@ const connectDB = ()=>{
     mongoose.connect(config.DB_URL);
 
     mongoose.connection.on('connected', ()=>{
-        console.log('connection to mongoDB successful');
+        logger.info('connection to mongoDB successful');
     })
 
     mongoose.connection.on('error', ()=>{
-        console.log('connection to mongoDB failed')
+        logger.info('connection to mongoDB failed')
     })
 
 }
