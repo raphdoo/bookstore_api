@@ -6,7 +6,8 @@ const authorRoute = require('./routes/author.route');
 const rateLimit = require('express-rate-limit');
 const helmet = require("helmet");
 const logger = require('./logger/logger');
-
+const auth0 = require('./auth/auth0');
+const { requiresAuth } = require('express-openid-connect');
 
 
 
@@ -22,6 +23,9 @@ const app = express();
 app.use(express.json());
 
 app.use(bodyParser.urlencoded({extended:false}));
+
+//authO setup
+app.use(auth0);
 
 //helmet security middleware
 app.use(helmet());
@@ -42,8 +46,8 @@ const limiter = rateLimit({
 app.use(limiter)
 
 //routes
-app.use('/api/v1/books', bookRoute);
-app.use('/api/v1/authors', authorRoute);
+app.use('/api/v1/books', requiresAuth(), bookRoute);
+app.use('/api/v1/authors', requiresAuth(), authorRoute);
 
 
 app.get('/', (req, res, next)=>{
@@ -51,7 +55,7 @@ app.get('/', (req, res, next)=>{
 })
 
 app.use((error, req, res, next)=>{
-    logger.error(error);
+    console.log(error);
     const errorStatus = error.status || 500;
     res.status(errorStatus).send(error.message);
 })
